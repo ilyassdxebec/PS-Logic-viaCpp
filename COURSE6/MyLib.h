@@ -13,12 +13,13 @@ namespace MyLib
 
 
 
- int ReadNumberOnly()
+ int ReadNumberOnly(string message)
 {
     int Number;
-    cout<<"Enter a number: ";
+    cout<< message;
     cin>>Number;
     cout<<endl;
+    
     while(cin.fail())
    {
      cin.clear();
@@ -28,7 +29,6 @@ namespace MyLib
    }    
     return Number;
 }
-
 
 
 int ReadNumber(string message)
