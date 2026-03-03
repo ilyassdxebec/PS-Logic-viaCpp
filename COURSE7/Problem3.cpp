@@ -32,7 +32,7 @@ void PrintMatrix(int arr[3][3], short Rows, short Cols)
     }
 }
 
-int SumMatrixRow(int arr[3][3], short Row, short Cols)
+int SumMatrixRowUsingArray(int arr[3][3], short Row, short Cols)
 { 
     int Sum = 0;
 
@@ -43,21 +43,30 @@ int SumMatrixRow(int arr[3][3], short Row, short Cols)
    return Sum;
 }
 
-void SumOfMatrixRows(int arr[3][3], short Rows, short Cols)
+void SumOfMatrixRows(int arr[3][3], short Rows, short Cols,int SumArr[3])
 {
 
    for (short i = 0; i < Rows; i++)
     {
-       cout<<"Sum of Row "<<i+1<<" is : "<<SumMatrixRow(arr,i,Cols);
-       cout<<endl;
+
+       SumArr[i] = SumMatrixRowUsingArray(arr,i,Cols);
+
     }
+}
+
+void PrintArrayOfRows(int arr[3],short Rows)
+{
+   for(short i=0;i<Rows;i++)
+   {
+      cout<<"Sum of Row Number "<<i+1<<" is : "<<arr[i]<<endl;
+   }
 }
 
 int main()
 {
     srand((unsigned)time(NULL));
 
-    int arr[3][3];
+    int arr[3][3], SumArr[3];
 
     FillMatrixWithRandomNumbers(arr, 3, 3)
     ;
@@ -67,5 +76,7 @@ int main()
      
     cout<<endl;
 
-    SumOfMatrixRows(arr,3,3);
+    SumOfMatrixRows(arr,3,3,SumArr);
+
+   PrintArrayOfRows(SumArr,3);
 }
