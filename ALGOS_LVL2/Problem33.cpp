@@ -3,7 +3,9 @@ using namespace std;
 
 enum enCharType{SmallLetter,CapitalLetter,Digit,SpecialCharacter};
 
-int ReadPositiveNumber(string message){
+int ReadPositiveNumber(string message)
+{
+
     int number;
     do{
         cout << endl << message;
@@ -12,11 +14,14 @@ int ReadPositiveNumber(string message){
     return number;
 }
 
-int RandomNumber(int from,int to){
+int RandomNumber(int from,int to)
+{
   int RandomNumber = rand()%(to-from+1)+from;
   return RandomNumber;
 }
-char GetRandomCharacter(enCharType CharType){
+
+char GetRandomCharacter(enCharType CharType)
+{
   switch (CharType)
   {
     case SmallLetter:
@@ -31,14 +36,16 @@ char GetRandomCharacter(enCharType CharType){
     return 'F';
   }
 }
-string GenerateWord(enCharType CharType, short length){
+string GenerateWord(enCharType CharType, short length)
+{
   string word = "";
     for(int i=1;i<=length;i++){
         word=word+GetRandomCharacter(CharType);
     }
     return word;
 }
-string GenerateKey(){
+string GenerateKey()
+{
     string key = "";
     key=key+GenerateWord(CapitalLetter,4)+"-";
     key=key+GenerateWord(CapitalLetter,4)+"-";
@@ -46,7 +53,8 @@ string GenerateKey(){
     key=key+GenerateWord(CapitalLetter,4);
     return key;
 }
-void GenerateKeys(int number,string arr[]){
+void GenerateKeys(int number,string arr[])
+{
   for(int i=0;i<number;i++){
     arr[i]=GenerateKey();
   }
@@ -58,7 +66,8 @@ void PrintArray(string arr[100], int arrLength)
         cout <<"Array["<<i+1<<"]: "<< arr[i] <<endl;
 
 }
-int main(){
+int main()
+{
     srand((unsigned)time(NULL));
 
     string arr[1000];

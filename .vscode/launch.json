@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/VSCODE-PRACTICE",
-      "program": "d:/VSCODE-PRACTICE/build/Debug/outDebug",
+      "cwd": "d:/cpp-fundamentals-practice-main/LOW_LEVEL",
+      "program": "d:/cpp-fundamentals-practice-main/LOW_LEVEL/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

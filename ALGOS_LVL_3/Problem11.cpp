@@ -46,10 +46,9 @@ int SumOfMatrixNumbers(int arr[3][3] ,short Columns ,short Rows)
   return Sum;
 }
 
-string isMtrix1EqualMatrix2(int arr1[3][3] ,int arr2[3][3] ,short Rows ,short Columns)
+bool isMtrix1EqualMatrix2(int arr1[3][3] ,int arr2[3][3] ,short Rows ,short Columns)
 {
-  return (SumOfMatrixNumbers(arr1,3,3)==SumOfMatrixNumbers(arr2,3,3)) ? "\nYes, Matrix 1 is same as matrix 2 !" : "\nNo, Matrix 1 is not same as matrix 2 !";
-
+  return SumOfMatrixNumbers(arr1,Rows,Columns)==SumOfMatrixNumbers(arr2,Rows,Columns);
 }
 
 int main()
@@ -70,6 +69,6 @@ int main()
 
     PrintMatrix(arr2, 3, 3);
     
-    cout<<isMtrix1EqualMatrix2(arr,arr2,3,3);
+    cout<< ((isMtrix1EqualMatrix2(arr,arr2,3,3)) ? "\nYes, Matrix 1 Sum equals Matrix 2 Sum !" : "\nNo, Matrix 1 Sum doesn't equal Matrix 2 Sum !");
     
 }
