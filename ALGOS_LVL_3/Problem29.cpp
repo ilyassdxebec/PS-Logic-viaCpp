@@ -1,6 +1,7 @@
 #include<iostream>
 #include<cctype>
 using namespace std;
+
 string ReadString ()
 {
   string String;
@@ -12,28 +13,27 @@ string ReadString ()
   return String;
 }
 
-char InvertLetterCase(char Letter)
+short CapitalLettersCount(const string &String)
 {
- return (isupper(Letter)) ? tolower(Letter) : toupper(Letter);
-}
+    short CapitalLetters = 0;
 
-void InvertStringLetters(string &S)
-{
-  for(short i=0;i<S.length();i++)
+  for(short i=0;i<String.length();i++)
   {
-     if(S[i] != ' ')
-     {
-       S[i] = InvertLetterCase(S[i]);
-     }
+    if(String[i] != ' ')
+    {
+      if(isupper(String[i]))
+      {
+         CapitalLetters++;
+      }
+    }
   }
+  return CapitalLetters;
 }
 
 int main()
 { 
   string String = ReadString();
 
-  InvertStringLetters(String);
-
-  cout<<endl<<"String after Inverting all it's Letters : "<<String;
+  cout<<"\nThis string's Length is "<<String.length()<<" and capital Numbers in it is : "<<CapitalLettersCount(String);
 
 }
