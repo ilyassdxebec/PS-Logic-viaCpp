@@ -12,13 +12,12 @@ string ReadString()
  return S;
 }
 
-void PrintStringWords(string S)
+int CalculateStringWords(string S)
 {
   string delim = " ";
   int pos = 0;
   string sWord;
-   
-  cout<<"\nHere are string words seperated : "<<endl;
+  int NumOfWords = 0;
 
   while((pos = S.find(delim)) != string::npos)
   {
@@ -26,7 +25,7 @@ void PrintStringWords(string S)
 
     if(sWord != "")
     {
-      cout<<sWord<<endl;
+      NumOfWords++;
     }
 
     S.erase(0,pos+delim.length());
@@ -34,11 +33,15 @@ void PrintStringWords(string S)
 
   if(S != "")
   {
-    cout<<S<<endl;
+    NumOfWords++;
   }
+  
+  return NumOfWords;
 }
 
 int main()
 {
-  PrintStringWords(ReadString());
+    string S = ReadString();
+    
+    cout<<"\nNumber of words in this string is : "<<CalculateStringWords(S);
 }
