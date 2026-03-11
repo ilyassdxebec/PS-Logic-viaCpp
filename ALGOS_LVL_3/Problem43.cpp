@@ -4,8 +4,6 @@
 #include<cctype>
 using namespace std;
 
-enum enCase {CaseSensitive = 1,CaseInsensitive = 2};
-
 string ReadString()
 {
  string S;
@@ -63,47 +61,36 @@ string tolowe(string S)
  return S;
 }
 
-string ReplaceWordsInString(string S ,string Old ,string New ,enCase Case)
+string ReplaceWordsInString(string S ,string Old ,string New ,bool MatchCase = true)
 {
   vector<string>vWords = SplitString(S);
-
-  vector<string>::iterator iter = vWords.begin();
-
-  switch (Case)
-  {
-  case CaseSensitive:
-    
-    while(iter != vWords.end())
-  {
-    if(*iter == Old)
-    {
-      *iter = New;
-    }
-    iter++;
-  }
-  return JoinString(vWords);
-
-  case CaseInsensitive:
   
-    while(iter != vWords.end())
+  for(string &s : vWords)
   {
-    if(tolowe(*iter) == tolowe(Old))
+    if(MatchCase)
     {
-      *iter = New;
+      if(s == Old)
+      {
+        s = New;
+      }
     }
-    iter++;
+    else
+    {
+      if(tolowe(s) == tolowe(Old))
+      {
+        s = New;
+      }
+    }
   }
+   
   return JoinString(vWords);
-  }
-  return "";
 }
 
 int main()
 {
   string S = ReadString();  
 
-  cout<<"\nReplacing String words CaseSensitive : "<<ReplaceWordsInString(S,"ilyass","goat",CaseSensitive)<<endl;
+  cout<<"\nReplacing String words CaseSensitive : "<<ReplaceWordsInString(S,"ilyass","goat")<<endl;
 
-  cout<<"Replacing String words CaseSensitive : "<<ReplaceWordsInString(S,"ilyass","goat",CaseInsensitive);
-
+  cout<<"Replacing String words CaseInSensitive : "<<ReplaceWordsInString(S,"ilyass","goat",false);
 }
