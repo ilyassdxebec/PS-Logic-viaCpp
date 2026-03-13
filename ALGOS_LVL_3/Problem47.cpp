@@ -3,6 +3,8 @@
 #include<fstream>
 using namespace std;
 
+const string ClientsFileName = "ClientsData.txt";
+
 struct stClient
 {
  string AccNumber;
@@ -16,10 +18,10 @@ stClient ReadClientData()
 {
  stClient Client;
 
- cout<<"Please Enter Client Data : "<<endl;
+ cout<<"+++Taking Client Data+++\n\n";
 
  cout<<"Enter AccNumber : ";
- getline(cin,Client.AccNumber);
+ getline(cin >> ws,Client.AccNumber);
 
  cout<<"Enter PinCode : ";
  getline(cin,Client.PinCode);
@@ -32,7 +34,6 @@ stClient ReadClientData()
 
  cout<<"Enter Account Balance : ";
  cin>>Client.AccBalance;
- cin.ignore();
 
  return Client;
 }
@@ -50,37 +51,52 @@ string ConvertRecordToLine(stClient Client ,string delim = "#//#")
   return Line;
 }
 
-void StringToFile(string &S)
+void AddLineToFile(string &Line ,string FileName)
 {
     fstream MyFile;
 
-    MyFile.open("ClientData.txt",ios::app);
+    MyFile.open(FileName,ios::app);
 
     if(MyFile.is_open())
     {
-     MyFile<<S<<endl;
+     MyFile<<Line<<endl;
     }
    MyFile.close();
 }
 
-int main()
+void AddNewClient()
 {
-  stClient Client;
-  string Line;
+ stClient Client;
+ string Line;
+
+ Client = ReadClientData();
+
+ Line = ConvertRecordToLine(Client);
+
+ AddLineToFile(Line,ClientsFileName);
+}
+
+void AddClients()
+{
   char Choice;
 
   do
   {
-    cout<<"Adding new client :\n\n";
+    system("cls");
 
-    Client = ReadClientData();
-    Line = ConvertRecordToLine(Client);
-    StringToFile(Line);
-    
-    cout<<"Client Added Successfully, Do you want to add more clients? (y/n) : ";
+    cout<<"Adding new client :\n\n";
+     
+    AddNewClient();
+
+    cout<<"\nClient Added Successfully, Do you want to add more clients? (y/n) : ";
     cin>>Choice;
 
-  } while (Choice == 'Y' || Choice == 'y');
+  } while (toupper(Choice) == 'Y');
 
-  cout<<"All Clients Have been Added Successfully !";
+  cout<<"\nAll Clients Have been Added Successfully !!!";
+}
+
+int main()
+{
+ AddClients();
 }
