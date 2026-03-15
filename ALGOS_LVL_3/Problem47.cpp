@@ -1,3 +1,5 @@
+//TODO adding clients info to txt file
+
 #include<iostream>
 #include<string>
 #include<fstream>
@@ -38,7 +40,7 @@ stClient ReadClientData()
  return Client;
 }
 
-string ConvertRecordToLine(stClient Client ,string delim = "#//#")
+string ConvertRecordToLine(const stClient &Client ,string delim = "#//#")
 {
   string Line = "";
 
@@ -51,7 +53,7 @@ string ConvertRecordToLine(stClient Client ,string delim = "#//#")
   return Line;
 }
 
-void AddLineToFile(string &Line ,string FileName)
+void AddLineToFile(const string &Line ,const string &FileName)
 {
     fstream MyFile;
 
@@ -66,11 +68,10 @@ void AddLineToFile(string &Line ,string FileName)
 
 void AddNewClient()
 {
- stClient Client;
+ stClient Client ;
  string Line;
 
  Client = ReadClientData();
-
  Line = ConvertRecordToLine(Client);
 
  AddLineToFile(Line,ClientsFileName);
