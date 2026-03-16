@@ -1,4 +1,4 @@
-//TODO : Delete Client from file By Account Number
+//TODO : Update Client In file By Account Number
 
 #include<iostream>
 #include<string>
@@ -18,6 +18,30 @@ struct stClient
  double AccBalance;
  bool MarkForDelete = false;
 };
+
+stClient ReadClientData(string AccountNumber)
+{
+ stClient Client;
+
+ cout<<"+++Taking Client Data+++\n\n";
+ 
+ Client.AccNumber = AccountNumber;
+ 
+ cin.ignore();
+ cout<<"Enter PinCode : ";
+ getline(cin,Client.PinCode);
+
+ cout<<"Enter Name : ";
+ getline(cin,Client.Name);
+
+ cout<<"Enter PhoneNumber : ";
+ getline(cin,Client.PhoneNumber);
+
+ cout<<"Enter Account Balance : ";
+ cin>>Client.AccBalance;
+
+ return Client;
+}
 
 vector<string> SplitStringToWords(string S ,string delim = " ")
 {
@@ -113,18 +137,6 @@ bool FindClientWithAccNumber(stClient &Client ,string AccountNumber ,const vecto
  return false;
 }
 
-void MarkClientForDelete(vector <stClient> &vClients ,const string &AccountNumber)
-{
-  for(stClient &C : vClients)
-  {
-    if(C.AccNumber == AccountNumber)
-    {
-      C.MarkForDelete = true;
-      break;
-    }
-  }
-}
-
 string ConvertRecordToLine(const stClient &Client ,string delim = "#//#")
 {
   string Line = "";
@@ -159,7 +171,19 @@ void SaveToFile(const string &FileName ,vector <stClient> &vClients)
    MyFile.close();
 }
 
-void DeleteClientFromFile(vector <stClient> &vClients ,const string &AccountNumber)
+void UpdateClient(vector <stClient> &vClient ,string AccountNumber)
+{
+  for(stClient &C : vClient)
+  {
+    if(C.AccNumber == AccountNumber)
+    {
+      C = ReadClientData(AccountNumber);
+      break;
+    }
+  }
+}
+
+void UpdateClientInFile(vector <stClient> &vClients ,const string &AccountNumber)
 {
    stClient Client;
    char Choice;
@@ -168,21 +192,20 @@ void DeleteClientFromFile(vector <stClient> &vClients ,const string &AccountNumb
     {
       PrintClientInfo(Client);
 
-      cout<<"\nAre you sure you want to delete this Client from file? (y/n)";
+      cout<<"\nAre you sure you want to Update this Client file? (y/n)";
       cin>>Choice;
       
       if(toupper(Choice) == 'Y')
       {
 
-        MarkClientForDelete(vClients ,AccountNumber);
+        UpdateClient(vClients , AccountNumber);
         SaveToFile(ClientsFileName ,vClients);
-        vClients = LoadClientsDataFromFile(ClientsFileName);
 
-        cout<<"\nClient was deleted Successfully !";
+        cout<<"\nClient Updated Successfully !";
       }
       else
       {
-        cout<<"\nClient wasn't deleted !";
+        cout<<"\nClient Not Updated !";
       }
 
     }
@@ -197,7 +220,7 @@ int main()
     vector<stClient>vClients = LoadClientsDataFromFile(ClientsFileName);
     string AccountNumber = ReadAccountNumber();
     
-    DeleteClientFromFile(vClients ,AccountNumber);
+    UpdateClientInFile(vClients ,AccountNumber);
 
     system("pause>0");
 }
