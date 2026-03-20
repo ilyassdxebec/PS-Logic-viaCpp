@@ -19,24 +19,12 @@ bool isLeapYear(int year)
 
 short DaysInMonth(int year, int month)
 {
-  if(month<1 || month>12) return 0;
+    if (month < 1 || month > 12) return 0;
 
-  if(month == 2)
-  {
-    return isLeapYear(year) ? 29 : 28 ;
-  }
+    short days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-  short arr31Days[7] = {1,3,5,7,8,10,12};
-
-  for(short i=0;i<7;i++) 
-  {
-    if(arr31Days[i] == month)
-    {
-        return 31;
-    }
-  }
-  return 30;
-} 
+    return (month == 2) ? (isLeapYear(year) ? 29 : 28) : days[month-1]; 
+}
 
 int HoursInMonth(int year ,int month)
 {
