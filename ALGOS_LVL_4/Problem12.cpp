@@ -19,13 +19,15 @@ int ReadNumber(string message)
   return Number;
 }
 
-int DayNameInWeek(int Year,int Month ,int Day)
+stDate ReadDateInfo()
 {
-  int a = (14 - Month) / 12;
-  int y = Year - a;
-  int m = Month + 12 * a - 2;
+  stDate Date;
+  
+  Date.Year = ReadNumber("\nPlease enter a Year : ");
+  Date.Month = ReadNumber("\nPlease enter a Month: ");
+  Date.Day = ReadNumber("\nPlease enter a Day : ");
 
-  return (Day + y + (y/4) - (y/100) + (y/400) + (31 * m) / 12) % 7;
+  return Date;
 }
 
 bool isLeapYear(int year)
@@ -72,42 +74,42 @@ int DaysFromBeginningOfYear(int Year ,int Month ,int Day)
  return TotalDays;
 }
 
-stDate ExtractDateFromDaysInYear(int Year ,int DaysInYear)
+void AddDaysToDate(stDate &Date ,const int &DaysToAdd)
 {
- stDate Date;
- Date.Year = Year;
- int RemainingDays = DaysInYear;
+ int RemainingDays = DaysToAdd + DaysFromBeginningOfYear(Date.Year ,Date.Month ,Date.Day);
+ int MonthDays;
+ Date.Month = 1;
 
-  int CurrentMonth = 1;
- Date.Month = DaysInMonth(Year ,CurrentMonth);
- 
  while(true)
- { 
-   if(RemainingDays > Date.Month)
+ {
+   MonthDays = DaysInMonth(Date.Year ,Date.Month);
+
+   if(RemainingDays > MonthDays)
    {
-     RemainingDays -= Date.Month;
-     CurrentMonth++;
-     Date.Month = DaysInMonth(Year ,CurrentMonth);
+     RemainingDays -= MonthDays;
+     Date.Month++;
+
+     if(Date.Month > 12)
+     {
+       Date.Year++;
+       Date.Month = 1;
+     }
    }
    else
    {
-     Date.Month = CurrentMonth;
-     Date.Day = RemainingDays;
-     break;
+    Date.Day = RemainingDays;
+    break;
    }
  }
- return Date;
 }
 
 int main()
 {
- int Year = ReadNumber("Please enter Year to check : ");
- int Month = ReadNumber("\nPlease enter Month to check : ");
- int Day = ReadNumber("\nPlease enter Day to check : ");
- int TotalDaysInYear = DaysFromBeginningOfYear(Year ,Month ,Day);
- stDate Date = ExtractDateFromDaysInYear(Year ,TotalDaysInYear);
+ stDate Date = ReadDateInfo();
+ 
+ int DaysToAdd = ReadNumber("\nPlease enter how many days to add : ");
 
- cout<<"\nDays From Start of Year to This date are : "<<TotalDaysInYear;
+ AddDaysToDate(Date ,DaysToAdd);
 
- cout<<"\nDate For ["<<TotalDaysInYear<<"] is :"<<Date.Year<<"/"<<Date.Month<<"/"<<Date.Day;
+ cout<<"\nDate after adding ["<<DaysToAdd<<"] days is : "<<Date.Day<<"/"<<Date.Month<<"/"<<Date.Year;
 }
