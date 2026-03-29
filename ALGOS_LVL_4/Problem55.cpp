@@ -1,45 +1,80 @@
-#include <iostream>
+#include<iostream>
+#include<string>
+#include<ctime>
+
 using namespace std;
 
 struct stDate
 {
-    short Year;
-    short Month;
-    short Day;
+ int Year;
+ int Month;
+ int Day;
 };
+
+short ReadDay()
+{
+    short Day;
+    cout << "Please enter a Day? ";
+    cin >> Day;
+    return Day;
+}
+ 
+short ReadMonth()
+{
+    short Month;
+    cout << "Please enter a Month? ";
+    cin >> Month;
+    return Month;
+}
+ 
+short ReadYear()
+{
+    short Year;
+    cout << "Please enter a Year? ";
+    cin >> Year;
+    return Year;
+}
+stDate ReadFullDate()
+{
+    stDate Date;
+    Date.Day   = ReadDay();
+    Date.Month = ReadMonth();
+    Date.Year  = ReadYear();
+    return Date;
+}
 
 bool isLeapYear(short Year)
 {
     return (Year % 4 == 0 && Year % 100 != 0) || (Year % 400 == 0);
 }
 
-bool IsDate1BeforeDate2(stDate Date1, stDate Date2)
+int DaysInYear(short Year)
 {
-    return (Date1.Year < Date2.Year) ? true :
-           ((Date1.Year == Date2.Year) ?
-               (Date1.Month < Date2.Month ? true :
-                   (Date1.Month == Date2.Month ? Date1.Day < Date2.Day : false))
-           : false);
+  if(isLeapYear(Year)) return 366;
+  return 365;
 }
 
 short NumberOfDaysInAMonth(short Month, short Year)
 {
     if (Month < 1 || Month > 12)
         return 0;
-
+ 
     int days[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
+ 
     return (Month == 2) ? (isLeapYear(Year) ? 29 : 28) : days[Month - 1];
 }
 
-bool IsLastDayInMonth(stDate Date)
+int DaysFromBeginningOfYear(int Year ,int Month ,int Day)
 {
-    return (Date.Day == NumberOfDaysInAMonth(Date.Month, Date.Year));
-}
+ int TotalDays = 0;
 
-bool IsLastMonthInYear(short Month)
-{
-    return (Month == 12);
+ for(int i=1 ;i<=Month - 1 ;i++)
+ {
+    TotalDays += NumberOfDaysInAMonth(i ,Year);
+ }
+ TotalDays += Day;
+
+ return TotalDays;
 }
 
 short DayOfWeekOrder(short Day, short Month, short Year)
@@ -49,34 +84,101 @@ short DayOfWeekOrder(short Day, short Month, short Year)
     y = Year - a;
     m = Month + (12 * a) - 2;
 
-    // Gregorian: 0=Sun, 1=Mon, 2=Tue ... 6=Sat
     return (Day + y + (y / 4) - (y / 100) + (y / 400) + ((31 * m) / 12)) % 7;
 }
 
-short DayOfWeekOrder(stDate Date)
+short DayOfWeekOrder(const stDate &Date)
 {
-    return DayOfWeekOrder(Date.Day, Date.Month, Date.Year);
+    short a, y, m;
+    a = (14 - Date.Month) / 12;
+    y = Date.Year - a;
+    m = Date.Month + (12 * a) - 2;
+
+    return (Date.Day + y + (y / 4) - (y / 100) + (y / 400) + ((31 * m) / 12)) % 7;
 }
 
-string DayShortName(short DayOfWeekOrder)
+bool IsEndOfWeek(const stDate &Date)
 {
-    string arrDayNames[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-
-    return arrDayNames[DayOfWeekOrder];
+  return DayOfWeekOrder(Date) == 6;
 }
 
-bool IsWeekEnd(stDate Date)
+bool IsWeekEnd(const stDate &Date)
 {
-    // Weekends are Fri and Sat
-    short DayIndex = DayOfWeekOrder(Date.Day, Date.Month, Date.Year);
-
-    return (DayIndex == 5 || DayIndex == 6);
+  return (DayOfWeekOrder(Date) == 6 || DayOfWeekOrder(Date) == 5);
 }
 
-bool IsBusinessDay(stDate Date)
+bool IsBusinessDay(const stDate &Date)
 {
-    // Invert IsWeekEnd to avoid duplicating logic
-    return !IsWeekEnd(Date);
+ return (!IsWeekEnd(Date));
+}
+
+int DaysUntilEndOfWeek(const stDate &Date)
+{
+  return 6 - DayOfWeekOrder(Date);
+}
+
+int DaysUntilEndOfMonth(const stDate &Date)
+{
+ return NumberOfDaysInAMonth(Date.Month ,Date.Year) - Date.Day;
+}
+
+int DaysUntilEndOfYear(const stDate &Date)
+{
+  return (DaysInYear(Date.Year) - DaysFromBeginningOfYear(Date.Year ,Date.Month ,Date.Day));
+}
+
+string ShortNameOfDay(const stDate &Date)
+{
+ string NameOfDay[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+
+ short OrderOfDay = DayOfWeekOrder(Date);
+
+ return NameOfDay[OrderOfDay];
+}
+
+bool IsDate1BeforeDate2(const stDate &Date1 ,const stDate &Date2)
+{
+return (Date1.Year < Date2.Year) ? true : ((Date1.Year == Date2.Year) ? (Date1.Month < Date2.Month ? true : (Date1.Month == Date2.Month ? Date1.Day < Date2.Day : false)) : false);
+}
+
+int DaysBetweenTwoDates(stDate Date1 ,stDate Date2)
+{
+  int Difference = 0;
+
+   if(Date1.Year == Date2.Year)
+   {
+      Difference =  (DaysFromBeginningOfYear(Date2.Year ,Date2.Month ,Date2.Day) - DaysFromBeginningOfYear(Date1.Year ,Date1.Month ,Date1.Day));  
+   }
+   
+   else
+   {
+       int DaysBetween = 0;
+
+   while(true)
+   { 
+     DaysBetween += DaysInYear(Date2.Year);
+     Date2.Year--;
+     
+        if(Date1.Year == Date2.Year)
+        {
+        Difference =  (DaysFromBeginningOfYear(Date2.Year ,Date2.Month ,Date2.Day) - DaysFromBeginningOfYear(Date1.Year ,Date1.Month ,Date1.Day)) + DaysBetween;
+        break;  
+        }
+
+   }
+   }
+
+   return IsDate1BeforeDate2(Date1 ,Date2) ? Difference : -Difference;
+}
+
+bool IsLastDayInMonth(stDate Date)
+{
+    return (Date.Day == NumberOfDaysInAMonth(Date.Month, Date.Year));
+}
+ 
+bool IsLastMonthInYear(short Month)
+{
+    return (Month == 12);
 }
 
 stDate IncreaseDateByOneDay(stDate Date)
@@ -103,93 +205,51 @@ stDate IncreaseDateByOneDay(stDate Date)
     return Date;
 }
 
-stDate IncreaseDateByXDays(short Days, stDate Date)
+stDate IncreaseDateByXDays(stDate Date ,const int &DaysToAdd)
 {
-    for (short i = 1; i <= Days; i++)
-    {
-        Date = IncreaseDateByOneDay(Date);
-    }
- 
-    return Date;
+ for(int i=0;i<DaysToAdd;i++)
+ {
+  Date = IncreaseDateByOneDay(Date);
+ }
+ return Date;
 }
 
-short ReadDay()
+stDate CalculateVacationReturnDate(stDate Date, int VacationDays)
 {
-    short Day;
-    cout << "\nPlease enter a Day? ";
-    cin >> Day;
-    return Day;
-}
+ int WeekEnd = 0;
 
-short ReadMonth()
-{
-    short Month;
-    cout << "Please enter a Month? ";
-    cin >> Month;
-    return Month;
-}
+ while(IsWeekEnd(Date))
+ {
+   Date = IncreaseDateByOneDay(Date);
+ }
 
-short ReadYear()
-{
-    short Year;
-    cout << "Please enter a Year? ";
-    cin >> Year;
-    return Year;
-}
+ for(int i=0 ;i<VacationDays + WeekEnd ;i++)
+ {
+   if(IsWeekEnd(Date))
+     WeekEnd++;
 
-stDate ReadFullDate()
-{
-    stDate Date;
-    Date.Day   = ReadDay();
-    Date.Month = ReadMonth();
-    Date.Year  = ReadYear();
-    return Date;
-}
+   Date = IncreaseDateByOneDay(Date);   
+ }
 
-int CalculateVacationDays(stDate DateFrom ,const stDate &DateTo)
-{
-  int VacationDays = 0;
+ while(IsWeekEnd(Date))
+ {
+   Date = IncreaseDateByOneDay(Date);
+ }
 
-  while(IsDate1BeforeDate2(DateFrom ,DateTo))
-  {
-    if(IsBusinessDay(DateFrom))
-    {
-      VacationDays++;
-    }    
-    
-      DateFrom = IncreaseDateByOneDay(DateFrom);
-  }
-  return VacationDays;
-}
-
-stDate CalculateVacationReturnDate(stDate DateFrom, int VacationDays)
-{
-    int BusinessDaysCount = 0;
-
-    while(BusinessDaysCount < VacationDays)
-    {
-        if(IsBusinessDay(DateFrom))
-         {
-            BusinessDaysCount++;
-         }
-
-        DateFrom = IncreaseDateByOneDay(DateFrom);
-    }
-
-    return DateFrom;
+ return Date;
 }
 
 int main()
-{   
-    stDate DateFrom ,DateTo;
-    int VacationDays;
+{
+ cout<<"Vacation Starts: \n\n";
+ stDate Date1 = ReadFullDate();
 
-    cout << "\nVacation Starts at : \n\n";
-    DateFrom = ReadFullDate();
+ int VacationDays;
 
-    cout<<"\n\nPlease enter vacation days : ";
-    cin>>VacationDays;
-    
-    DateTo = CalculateVacationReturnDate(DateFrom ,VacationDays);
-    cout<<"\n\nReturn Date is : "<<DayShortName(DayOfWeekOrder(DateTo))<<" , "<<DateTo.Day<<"/"<<DateTo.Month<<"/"<<DateTo.Year;
+ cout<<"\nPlease enter Vacation Days : ";
+ cin>>VacationDays;
+ 
+ stDate Date2 = CalculateVacationReturnDate(Date1 ,VacationDays);
+
+ cout<<"\nVacation End Date is : "<<Date2.Day<<"/"<<Date2.Month<<"/"<<Date2.Year;
 }

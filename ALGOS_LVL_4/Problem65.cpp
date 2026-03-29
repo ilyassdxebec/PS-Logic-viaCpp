@@ -35,20 +35,6 @@ vector<string> SplitString(string S ,string delim = " ")
   return vWords;
 }
 
-string ReplaceWordInString(string S1, string StringToReplace, string sRepalceTo)
-{
-
-  short pos = S1.find(StringToReplace);
-
-    while(pos != std::string::npos)
-    {
-       S1 = S1.replace(pos, StringToReplace.length(), sRepalceTo);
-       pos = S1.find(StringToReplace);//find next
-    }
-
-  return S1;
-}
-
 stDate ConvertStringToDate(const vector<string>&vDate)
 {
   stDate Date;
@@ -71,13 +57,25 @@ string DateToString(const stDate &Date ,const string &delim = "/")
   return S;
 }
 
-string FormateDate(const stDate &Date ,string Format = "dd/mm/yyyy")
+string ReplaceSpecificWord(string S ,string OldWord ,string NewWord)
+{
+  int pos;
+
+  while((pos = S.find(OldWord)) != string::npos)
+  {
+   S.replace(pos,OldWord.length(),NewWord);
+  }
+
+  return S;
+}
+
+string FormatDate(stDate Date ,string Format = "dd/mm/yyyy")
 {
   string FormatedDate = "";
-
-  FormatedDate = ReplaceWordInString(Format ,"dd",to_string(Date.Day));
-  FormatedDate = ReplaceWordInString(FormatedDate ,"mm",to_string(Date.Month));
-  FormatedDate = ReplaceWordInString(FormatedDate ,"yyyy",to_string(Date.Year));
+  
+  FormatedDate = ReplaceSpecificWord(Format ,"dd" ,to_string(Date.Day));
+  FormatedDate = ReplaceSpecificWord(FormatedDate ,"mm" ,to_string(Date.Month));
+  FormatedDate = ReplaceSpecificWord(FormatedDate ,"yyyy" ,to_string(Date.Year));
 
   return FormatedDate;
 }
@@ -94,6 +92,6 @@ int main()
   Date = ConvertStringToDate(SplitString(StringDate ,"/"));
   
   cout<<"\nYou entered : "<<Date.Day<<"/"<<Date.Month<<"/"<<Date.Year;
-  
-  cout<<"\nFormated Date is : "<<FormateDate(Date ,"yyyy/dd/mm");
+
+  cout<<"\n Date Formated : "<<FormatDate(Date ,"yyyy/mm/dd");
 }

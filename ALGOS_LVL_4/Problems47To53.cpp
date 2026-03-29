@@ -1,13 +1,14 @@
-#include <iostream>
+#include<iostream>
+#include<string>
 #include<ctime>
 
 using namespace std;
 
 struct stDate
 {
-    short Year;
-    short Month;
-    short Day;
+ int Year;
+ int Month;
+ int Day;
 };
 
 bool isLeapYear(short Year)
@@ -15,30 +16,20 @@ bool isLeapYear(short Year)
     return (Year % 4 == 0 && Year % 100 != 0) || (Year % 400 == 0);
 }
 
-short DaysInMonth(int year, int month)
+int DaysInYear(short Year)
 {
-  if(month<1 || month>12) return 0;
-
-  if(month == 2)
-  {
-    return isLeapYear(year) ? 29 : 28 ;
-  }
-
-  short arr31Days[7] = {1,3,5,7,8,10,12};
-
-  for(short i=0;i<7;i++) 
-  {
-    if(arr31Days[i] == month)
-    {
-        return 31;
-    }
-  }
-  return 30;
+  if(isLeapYear(Year)) return 366;
+  return 365;
 }
 
-int DaysInYear(short year)
+short NumberOfDaysInAMonth(short Month, short Year)
 {
-  return (isLeapYear(year)) ? 366 : 365 ;
+    if (Month < 1 || Month > 12)
+        return 0;
+ 
+    int days[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+ 
+    return (Month == 2) ? (isLeapYear(Year) ? 29 : 28) : days[Month - 1];
 }
 
 int DaysFromBeginningOfYear(int Year ,int Month ,int Day)
@@ -47,7 +38,7 @@ int DaysFromBeginningOfYear(int Year ,int Month ,int Day)
 
  for(int i=1 ;i<=Month - 1 ;i++)
  {
-    TotalDays += DaysInMonth(Year ,i);
+    TotalDays += NumberOfDaysInAMonth(i ,Year);
  }
  TotalDays += Day;
 
@@ -66,45 +57,27 @@ short DayOfWeekOrder(short Day, short Month, short Year)
 
 short DayOfWeekOrder(const stDate &Date)
 {
-  return DayOfWeekOrder(Date.Year ,Date.Month ,Date.Day);
+    short a, y, m;
+    a = (14 - Date.Month) / 12;
+    y = Date.Year - a;
+    m = Date.Month + (12 * a) - 2;
+
+    return (Date.Day + y + (y / 4) - (y / 100) + (y / 400) + ((31 * m) / 12)) % 7;
 }
 
-string DayShortName(short DayOfWeekOrder)
-{
-    string arrDayNames[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-
-    return arrDayNames[DayOfWeekOrder];
-}
-
-stDate GetCurrentDate()
-{
- stDate CurrentDate;   
-
- time_t now = time(0);
- tm* ltm = localtime(&now);
-
- CurrentDate.Day = ltm->tm_mday;
- CurrentDate.Month = 1 + ltm->tm_mon;
- CurrentDate.Year = 1900 + ltm->tm_year;
-
- return CurrentDate;
-}
-
-bool isEndOfWeek(const stDate &Date)
+bool IsEndOfWeek(const stDate &Date)
 {
   return DayOfWeekOrder(Date) == 6;
 }
 
-bool isWeekEnd(const stDate &Date)
+bool IsWeekEnd(const stDate &Date)
 {
-   short Day = DayOfWeekOrder(Date);
-
-   return (Day == 5 || Day == 6);
+  return (DayOfWeekOrder(Date) == 6 || DayOfWeekOrder(Date) == 5);
 }
 
-bool isBusinessDay(const stDate &Date)
+bool IsBusinessDay(const stDate &Date)
 {
-  return (!(isWeekEnd(Date)));
+ return (!IsWeekEnd(Date));
 }
 
 int DaysUntilEndOfWeek(const stDate &Date)
@@ -114,32 +87,53 @@ int DaysUntilEndOfWeek(const stDate &Date)
 
 int DaysUntilEndOfMonth(const stDate &Date)
 {
-  int DaysInCurrentMonth = DaysInMonth(Date.Year ,Date.Month);
-
-  return DaysInCurrentMonth - Date.Day;
+ return NumberOfDaysInAMonth(Date.Month ,Date.Year) - Date.Day;
 }
 
 int DaysUntilEndOfYear(const stDate &Date)
 {
-   return DaysInYear(Date.Year) - DaysFromBeginningOfYear(Date.Year ,Date.Month ,Date.Day);
+  return (DaysInYear(Date.Year) - DaysFromBeginningOfYear(Date.Year ,Date.Month ,Date.Day));
+}
+
+stDate GetCurrentDate()
+{
+ stDate stCurrentDate;
+
+ time_t t = time(0); // get time now
+ tm* now = localtime(&t);
+
+ stCurrentDate.Year = now->tm_year + 1900;
+ stCurrentDate.Month = now->tm_mon + 1;
+ stCurrentDate.Day = now->tm_mday;
+
+ return stCurrentDate;
+}
+
+string ShortNameOfDay(const stDate &Date)
+{
+ string NameOfDay[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+
+ short OrderOfDay = DayOfWeekOrder(Date);
+
+ return NameOfDay[OrderOfDay];
 }
 
 int main()
 {
-    stDate Date = GetCurrentDate();
+ stDate stCurrentDate = GetCurrentDate();
 
-    cout<<"Today is : "<<DayShortName(DayOfWeekOrder(Date))<<" ,"<<Date.Day<<"/"<<Date.Month<<"/"<<Date.Year<<"\n\n";
+ cout<<"Today is : "<<ShortNameOfDay(stCurrentDate)<<" , "<<stCurrentDate.Day<<"/"<<stCurrentDate.Month<<"/"<<stCurrentDate.Year<<"\n\n";
 
-    cout<<"Is it the end of the week ? "<<endl;
-    cout<< ((isEndOfWeek(Date)) ? "Yes ,it is end of week!\n\n" :  "No ,it is not end of week!\n\n");
-    
-    cout<<"Is it the WeekEnd ? "<<endl;
-    cout<< ((isWeekEnd(Date)) ? "Yes ,it is weekend!\n\n" :  "No ,it is not the weekend!\n\n");
+ cout<<"Is it end of week? "<<endl;
+ cout<<((IsEndOfWeek(stCurrentDate)) ? "Yes ,Today is end of week!" : "No ,Today is not end of week!")<<"\n\n";
 
-    cout<<"Is it a business day ? "<<endl;
-    cout<< ((isBusinessDay(Date)) ? "Yes ,it is a business day!\n\n" :  "No ,it is not a business day!\n\n");
+ cout<<"Is it weekend? "<<endl;
+ cout<<((IsWeekEnd(stCurrentDate)) ? "Yes ,Today is weekend!" : "No ,Today is not weekend!")<<"\n\n";
 
-    cout<<"Days until end of week are : "<<DaysUntilEndOfWeek(Date)<<" Day(s)"<<endl;
-    cout<<"Days until end of month are : "<<DaysUntilEndOfMonth(Date)<<" Day(s)"<<endl;
-    cout<<"Days until end of year are : "<<DaysUntilEndOfYear(Date)<<" Day(s)"<<endl;
+ cout<<"Is it Business Day? "<<endl;
+ cout<<((IsBusinessDay(stCurrentDate)) ? "Yes ,Today is a business day!" : "No ,Today is not a business day!")<<"\n\n";
+
+ cout<<"Days until end of week : "<<DaysUntilEndOfWeek(stCurrentDate)<<endl;
+ cout<<"Days until end of month : "<<DaysUntilEndOfMonth(stCurrentDate)<<endl;
+ cout<<"Days until end of year : "<<DaysUntilEndOfYear(stCurrentDate);
 }

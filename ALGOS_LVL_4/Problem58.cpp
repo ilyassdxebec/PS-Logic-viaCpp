@@ -1,48 +1,54 @@
 #include<iostream>
 #include<string>
 #include<ctime>
+
 using namespace std;
 
-enum enDatesComparison {Before = -1 , Equal = 0 , After = 1};
-enum enPeriodsOverlap {NoOverlap = 0 , Overlaps = 1};
+enum enDateComparison {Before = -1 ,Equal = 0 ,After = 1};
 
-struct stDate 
+struct stDate
 {
-  int Year;
-  int Month;
-  int Day;
+ int Year;
+ int Month;
+ int Day;
 };
 
 struct stPeriod
 {
-  stDate DateFrom;
-  stDate DateTo;
+ stDate PeriodStart;
+ stDate PeriodEnd;
 };
 
-int ReadNumber(string message)
+short ReadDay()
 {
-  int Number;
-
-  cout<<message;
-  cin>>Number;
-  
-  return Number;
+    short Day;
+    cout << "Please enter a Day? ";
+    cin >> Day;
+    return Day;
 }
-
-stDate ReadDateInfo()
+ 
+short ReadMonth()
 {
-  stDate Date;
-  
-  Date.Year = ReadNumber("\n\nPlease enter a Year : ");
-  Date.Month = ReadNumber("\nPlease enter a Month: ");
-  Date.Day = ReadNumber("\nPlease enter a Day : ");
-
-  return Date;
+    short Month;
+    cout << "Please enter a Month? ";
+    cin >> Month;
+    return Month;
 }
-
-bool IsDate1EqualDate2(stDate Date1, stDate Date2)
+ 
+short ReadYear()
 {
-return (Date1.Year == Date2.Year) ? ((Date1.Month == Date2.Month) ? ((Date1.Day == Date2.Day) ? true : false) : false) : false;
+    short Year;
+    cout << "Please enter a Year? ";
+    cin >> Year;
+    return Year;
+}
+stDate ReadFullDate()
+{
+    stDate Date;
+    Date.Day   = ReadDay();
+    Date.Month = ReadMonth();
+    Date.Year  = ReadYear();
+    return Date;
 }
 
 bool IsDate1BeforeDate2(const stDate &Date1 ,const stDate &Date2)
@@ -50,62 +56,44 @@ bool IsDate1BeforeDate2(const stDate &Date1 ,const stDate &Date2)
 return (Date1.Year < Date2.Year) ? true : ((Date1.Year == Date2.Year) ? (Date1.Month < Date2.Month ? true : (Date1.Month == Date2.Month ? Date1.Day < Date2.Day : false)) : false);
 }
 
+bool IsDate1EqualsDate2(const stDate &Date1 ,const stDate &Date2)
+{
+  return (Date1.Year == Date2.Year) && (Date1.Month == Date2.Month) && (Date1.Day == Date2.Day);
+}
+
 bool IsDate1AfterDate2(const stDate &Date1 ,const stDate &Date2)
 {
-  return (!IsDate1BeforeDate2(Date1 ,Date2) && !IsDate1EqualDate2(Date1 ,Date2));
+  return (!IsDate1BeforeDate2(Date1 ,Date2)) && (!IsDate1EqualsDate2(Date1 ,Date2));
 }
 
-enDatesComparison CompareDates(const stDate &Date1 ,const stDate &Date2)
+enDateComparison CompareTwoDates(stDate Date1 ,stDate Date2)
 {
-  if(IsDate1BeforeDate2(Date1 ,Date2)) return  Before;
-  if(IsDate1AfterDate2(Date1 ,Date2)) return After;
-
-  return Equal;
+  if(IsDate1BeforeDate2(Date1 ,Date2)) return Before;
+  if(IsDate1EqualsDate2(Date1 ,Date2)) return Equal;
+  return After;
 }
 
-stPeriod ReadPeriod()
+void ReadPeriodInfo(stPeriod &Period)
 {
- stPeriod Period;
-
- Period.DateFrom = ReadDateInfo();
- Period.DateTo = ReadDateInfo();
-
- return Period;
+ Period.PeriodStart = ReadFullDate();
+ cout<<endl;
+ Period.PeriodEnd = ReadFullDate();
 }
 
-enPeriodsOverlap isPeriodsOverlap(const stPeriod &Period1, const stPeriod &Period2)
+bool AreTwoPeriodsOverlaped(const stPeriod &Period1 ,const stPeriod &Period2)
 {
-    if (IsDate1BeforeDate2(Period2.DateTo, Period1.DateFrom) ||
-        IsDate1AfterDate2(Period2.DateFrom, Period1.DateTo))
-        return NoOverlap;
-
-    return Overlaps;
+  return !(CompareTwoDates(Period1.PeriodEnd ,Period2.PeriodStart) == Before || CompareTwoDates(Period2.PeriodEnd ,Period1.PeriodStart) == Before);
 }
 
 int main()
 {
-  stPeriod Period1 ,Period2;
-  
-  cout<<"\nPeriod1:";
-  Period1 = ReadPeriod();
+ stPeriod Period1 ,Period2;
+ 
+ cout<<"Reading First Period : \n\n";
+ ReadPeriodInfo(Period1);
+ 
+ cout<<"Reading Second Period : \n\n";
+ ReadPeriodInfo(Period2);
 
-  cout<<"\nPeriod2:";
-  Period2 = ReadPeriod();
-
-  switch (isPeriodsOverlap(Period1 ,Period2))
-  {
-  case Overlaps:
-
-    cout<<"\nYes ,Periods Overlaps!";
-    break;
-  
-  case NoOverlap:
-
-    cout<<"\nNo ,Periods don't overlap!";
-    break;
-
-  default:
-    break;
-  }
-
+ cout<<(AreTwoPeriodsOverlaped(Period1 ,Period2) ? "\nYes ,the periods overlap!" : "\nNo ,the periods don't overlap!");
 }

@@ -57,6 +57,15 @@ stDate IncreaseDateByOneDay(stDate Date)
     return Date;
 }
  
+stDate IncreaseDateByXDays(stDate Date ,const int &DaysToAdd)
+{
+ for(int i=0;i<DaysToAdd;i++)
+ {
+  Date = IncreaseDateByOneDay(Date);
+ }
+ return Date;
+}
+
 stDate IncreaseDateByOneWeek(stDate Date)
 {
     for (int i = 1; i <= 7; i++)
