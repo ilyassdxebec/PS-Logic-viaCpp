@@ -4,11 +4,17 @@ using namespace std;
 class clsPerson
 {
  private:
-
+   
+   int _ID = 55;
    string _FirstName;
    string _LastName;
 
  public:
+   
+   int ID()
+   {
+     return _ID;
+   }
 
    void SetFirstName(string FirstName)
    {
@@ -48,6 +54,8 @@ int main()
   cout<<"Last Name is : "<<Person1.LastName()<<endl;
 
   cout<<"Full Name is : "<<Person1.FullName()<<endl;
+  
+  cout<<"Person Id is : "<<Person1.ID()<<endl;
 
   system("Pause");
 }
