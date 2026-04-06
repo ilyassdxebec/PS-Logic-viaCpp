@@ -3,11 +3,9 @@ using namespace std;
 
 class clsPerson
 {
-    
- int x;
-     
- public:
 
+ public:
+ 
   string FirstName;
   string LastName;
 
@@ -15,6 +13,7 @@ class clsPerson
   {
      return FirstName + " " + LastName;
   }
+
 };
 
 int main()
