@@ -4,100 +4,112 @@ using namespace std;
 class clsCalculator
 {
  private:
-  
-  enum enOperationType  {enAdd = 1 ,enSubtract = 2 ,enMultiply = 3 ,enDivide = 4 ,enClear = 5};
 
-  int _Value = 0;
-  int _Number = 0;
-  enOperationType OperationNumber;
+  float _Result = 0;
+  float _LastNumber = 0;
+  float _PreviousResult = 0;
+  string _LastOperation = "Clear";
 
-  string _OperationName(enOperationType OpType)
+  bool _IsZero(const float &Number)
   {
-    switch (OpType)
-    {
-    case enAdd:
-        return "Adding";
-    
-    case enSubtract:
-        return "Subtracting";
+    return (Number == 0) ;
+  }
+ 
+ public:
+  
+  void Add(float Number)
+  {
+    _LastOperation = "Adding";
 
-    case enClear:
-        return "Clearing";
-        
-    case enMultiply:
-        return "Multiplying";
-        
-    case enDivide:
-        return "Dividing";
-        
-        
-    default:
-        return "Unkown Operation!";
-    }
+    _LastNumber = Number;
+    _PreviousResult = _Result;
+    _Result += Number;
   }
   
- public:
+  void Subtract(float Number)
+  {
+    _LastOperation = "Subtracting";
 
+    _LastNumber = Number;
+    _PreviousResult = _Result;
+    _Result -= Number;
+  }
+
+  void Multiply(float Number)
+  {
+    _LastOperation = "Multiplying";
+
+    _LastNumber = Number;
+    _PreviousResult = _Result;
+    _Result *= Number;
+  }
+
+  void Divide(float Number)
+  {
+    _LastOperation = "Dividing";
+    
+    if(_IsZero(Number))
+      Number = 1;
+
+    _LastNumber = Number;
+    _PreviousResult = _Result;
+    _Result /= Number;
+  }
+  
   void Clear()
   {
-    _Value = 0;
-    OperationNumber = enClear; 
-  }
-  
-  void Add(int Number)
-  { 
-    _Number = Number;
-    _Value += Number;
-    OperationNumber = enAdd;
+    _LastOperation = "Clearing";
+
+    _LastNumber = 0;
+    _PreviousResult = 0;
+    _Result = 0 ;
   }
 
-  void Subtract(int Number)
+  void CancelLastOperation()
   {
+    _LastOperation = "Cancelling Last Operation";
 
-    _Number = Number;
-    _Value -= Number;
-    OperationNumber = enSubtract;
-  }
-
-  void Multiply(int Number)
-  {
-    _Number = Number;
-    _Value *= Number;
-    OperationNumber = enMultiply;
-  }
-
-  void Divide(int Number)
-  { 
-    if(Number == 0)
-       Number = 1;
-
-    _Number = Number;
-    _Value /= Number;
-    OperationNumber = enDivide;
+    _Result = _PreviousResult;
+    _LastNumber = 0;
   }
   
   void PrintResult()
   {
-    cout<<"Result After "<<_OperationName(OperationNumber)<<" "<<_Number<<" is : "<<_Value<<endl;
+   cout<<"Result After "<<_LastOperation<<" "<<_LastNumber<<" is : "<<_Result<<endl;
   }
+
 };
 
 int main()
 {
- clsCalculator Calculator1;
 
- Calculator1.Clear();
- Calculator1.PrintResult();
- 
- Calculator1.Add(54);
- Calculator1.PrintResult();
+clsCalculator Calculator1;
 
- Calculator1.Subtract(45);
- Calculator1.PrintResult();
+Calculator1.Clear();
 
- Calculator1.Divide(45);
- Calculator1.PrintResult();
+Calculator1.Add(10);
+Calculator1.PrintResult();
 
- cout<<endl;
- system("pause");
+Calculator1.Add(100);
+Calculator1.PrintResult();
+
+Calculator1.Subtract(20);
+Calculator1.PrintResult();
+
+Calculator1.Divide(0);
+Calculator1.PrintResult();
+
+Calculator1.Divide(2);
+Calculator1.PrintResult();
+
+Calculator1.Multiply(3);
+Calculator1.PrintResult();
+
+Calculator1.CancelLastOperation();
+Calculator1.PrintResult();
+
+Calculator1.Clear();
+Calculator1.PrintResult();
+
+system("pause");
 }
