@@ -11,7 +11,7 @@ class clsCalculator
   int _Number = 0;
   enOperationType OperationNumber;
 
-  string OperationName(enOperationType OpType)
+  string _OperationName(enOperationType OpType)
   {
     switch (OpType)
     {
@@ -78,7 +78,7 @@ class clsCalculator
   
   void PrintResult()
   {
-    cout<<"Result After "<<OperationName(OperationNumber)<<" "<<_Number<<" is : "<<_Value<<endl;
+    cout<<"Result After "<<_OperationName(OperationNumber)<<" "<<_Number<<" is : "<<_Value<<endl;
   }
 };
 
