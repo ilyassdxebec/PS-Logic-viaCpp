@@ -27,23 +27,27 @@ class clsA
   }
 };
 
-class clsB : public clsA
+class clsB : private clsA
 { 
  public:
 
   void Func4()
   {
+
     clsA::Func2();
   }
   
 };
 
+class clsC : public clsB
+{
+
+};
+
 int main()
 {
-  clsB Object;
-
-  Object.Func3();
-  Object.Func4();
-
+  
+  clsB B;
+  
   system("pause>0");
 }
