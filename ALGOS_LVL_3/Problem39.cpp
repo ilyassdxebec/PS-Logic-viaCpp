@@ -24,7 +24,7 @@ vector<string> ReadWords()
  return vWords;
 }
 
-string JoinString(const vector<string>&vString,string delim = " ")
+string JoinString(const vector<string>&vString ,string delim = " ")
 {   
     string Joined = "";
     
@@ -41,4 +41,6 @@ int main()
   vector<string>vWords = ReadWords();
   
   cout<<"the joined string is : "<<JoinString(vWords,",");
+
+  system("Pause>0");
 }

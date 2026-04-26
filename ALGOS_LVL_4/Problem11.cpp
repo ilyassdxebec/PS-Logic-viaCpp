@@ -105,6 +105,7 @@ int main()
  int Month = ReadNumber("\nPlease enter Month to check : ");
  int Day = ReadNumber("\nPlease enter Day to check : ");
  int TotalDaysInYear = DaysFromBeginningOfYear(Year ,Month ,Day);
+ 
  stDate Date = ExtractDateFromDaysInYear(Year ,TotalDaysInYear);
 
  cout<<"\nDays From Start of Year to This date are : "<<TotalDaysInYear;

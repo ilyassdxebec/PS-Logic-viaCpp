@@ -41,4 +41,6 @@ void PrintStringWords(string S)
 int main()
 {
   PrintStringWords(ReadString());
+
+  system("pause>0");
 }

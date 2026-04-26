@@ -60,4 +60,6 @@ int main()
   string S = ReadString();
 
   cout<<"\n the reversed the string is : "<<ReverseString(S);
+
+  system("pause>0");
 }

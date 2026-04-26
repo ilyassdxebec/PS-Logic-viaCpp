@@ -15,7 +15,7 @@ string ReadString()
  return S;
 }
 
-string JoinString(const vector<string>&vString,string delim = " ")
+string JoinString(const vector <string> &vString ,string delim = " ")
 {   
     string Joined = "";
     

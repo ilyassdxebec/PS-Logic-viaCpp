@@ -31,4 +31,6 @@ int main()
   UpercaseFirstLetters(String);
 
   cout<<endl<<String;
+
+  system("pause>0");
 }

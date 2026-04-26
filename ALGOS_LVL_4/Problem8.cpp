@@ -48,6 +48,7 @@ string MonthShortName(short MonthNumber)
 void PrintMonthCalendar(short Month, short Year)
 {
     int NumberOfDays;
+
     int current = DayOfWeekOrder(1, Month, Year);
     NumberOfDays = NumberOfDaysInAMonth(Month, Year);
 
@@ -95,4 +96,6 @@ int main()
     short Month = ReadMonth();
 
     PrintMonthCalendar(Month, Year);
+
+    system("pause>0");
 }

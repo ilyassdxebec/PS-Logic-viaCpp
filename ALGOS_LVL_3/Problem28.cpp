@@ -35,5 +35,6 @@ int main()
   InvertStringLetters(String);
 
   cout<<endl<<"String after Inverting all it's Letters : "<<String;
-
+  
+  system("pause>0");
 }
